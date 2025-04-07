@@ -1,28 +1,44 @@
-def heuristic(state, goal):
-    return abs(state[0] - goal[0]) + abs(state[1] - goal[1])
+class WaterJugHillClimbing:
+    def __init__(self, start, capacity_x, capacity_y, goal):
+        self.capacity_x = capacity_x
+        self.capacity_y = capacity_y
+        self.goal = goal
+        self.path = [start]
 
-def get_neighbors(state, capacities):
-    x, y = state
-    a, b = capacities
-    return list(set([
-        (a, y), (x, b), (0, y), (x, 0),
-        (min(x + y, a), max(0, y - (a - x))),
-        (max(0, x - (b - y)), min(x + y, b))
-    ]))
+    def get_next_states(self, state):
+        x, y = state
+        possible_states = set()
+        possible_states.add((self.capacity_x, y))  # Fill X
+        possible_states.add((x, self.capacity_y))  # Fill Y
+        possible_states.add((0, y))                # Empty X
+        possible_states.add((x, 0))                # Empty Y
+        pour_x_to_y = min(x, self.capacity_y - y)
+        possible_states.add((x - pour_x_to_y, y + pour_x_to_y))
+        pour_y_to_x = min(y, self.capacity_x - x)
+        possible_states.add((x + pour_y_to_x, y - pour_y_to_x))
+        return list(possible_states)
 
-def hill_climb(start, goal, capacities):
-    current = start
-    path = [current]
-    visited = set([current])
-    while current != goal:
-        neighbors = get_neighbors(current, capacities)
-        neighbors = [n for n in neighbors if n not in visited]
-        if not neighbors:
-            break
-        next_state = min(neighbors, key=lambda s: heuristic(s, goal))
-        if heuristic(next_state, goal) >= heuristic(current, goal):
-            break
-        visited.add(next_state)
-        current = next_state
-        path.append(current)
-    return path
+    def heuristic(self, state):
+        return -abs(self.goal[0] - state[0]) - abs(self.goal[1] - state[1])
+
+    def solve(self, start):
+        current_state = start
+        visited = set([current_state])
+
+        while True:
+            next_states = [s for s in self.get_next_states(current_state) if s not in visited]
+            if not next_states:
+                return self.path  # No more states to explore
+
+            next_states.sort(key=self.heuristic, reverse=True)
+            best_next = next_states[0]
+
+            if self.heuristic(best_next) <= self.heuristic(current_state):
+                return self.path
+
+            visited.add(best_next)
+            current_state = best_next
+            self.path.append(current_state)
+
+            if current_state == self.goal:
+                return self.path

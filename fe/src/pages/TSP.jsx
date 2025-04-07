@@ -1,94 +1,3 @@
-// import React, { useState } from 'react';
-// import axios from 'axios';
-// import { BACKEND_URL } from '../config';
-
-
-// export default function TSP() {
-//     const [method, setMethod] = useState('dfs');
-//     const [graphText, setGraphText] = useState('');
-//     const [start, setStart] = useState('');
-//     const [result, setResult] = useState(null);
-//     const [error, setError] = useState('');
-
-//     const handleSubmit = async (e) => {
-//         e.preventDefault();
-//         setResult(null);
-//         setError('');
-
-//         try {
-//             const graph = JSON.parse(graphText);
-//             const response = await axios.post(`${BACKEND_URL}/api/tsp`, { graph, start, method });
-//             setResult(response.data);
-//         } catch (err) {
-//             setError(err.response?.data?.error || 'Something went wrong. Check your inputs.');
-//         }
-//     };
-
-//     return (
-//         <div className="max-w-3xl mx-auto p-6 bg-white shadow rounded-xl mt-10">
-//             <h1 className="text-2xl font-bold mb-4 text-center">Travelling Salesman Problem (DFS / BFS)</h1>
-//             <form onSubmit={handleSubmit} className="space-y-4">
-//                 <div>
-//                     <label className="block font-medium text-gray-700">Choose Algorithm</label>
-//                     <select
-//                         value={method}
-//                         onChange={(e) => setMethod(e.target.value)}
-//                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-//                     >
-//                         <option value="dfs">DFS</option>
-//                         <option value="bfs">BFS</option>
-//                     </select>
-//                 </div>
-
-//                 <div>
-//                     <label className="block font-medium text-gray-700">Graph (in JSON format)</label>
-//                     <textarea
-//                         value={graphText}
-//                         onChange={(e) => setGraphText(e.target.value)}
-//                         rows={8}
-//                         placeholder={`{
-//   "A": {"B": 10, "C": 15, "D": 20},
-//   "B": {"A": 10, "C": 35, "D": 25},
-//   "C": {"A": 15, "B": 35, "D": 30},
-//   "D": {"A": 20, "B": 25, "C": 30}
-// }`}
-//                         className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 font-mono text-sm p-2"
-//                     />
-//                 </div>
-
-//                 <div>
-//                     <label className="block font-medium text-gray-700">Start Node</label>
-//                     <input
-//                         type="text"
-//                         value={start}
-//                         onChange={(e) => setStart(e.target.value)}
-//                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-//                         placeholder="A"
-//                         required
-//                     />
-//                 </div>
-
-//                 <button
-//                     type="submit"
-//                     className="w-full bg-indigo-600 text-white py-2 rounded-md font-semibold hover:bg-indigo-700 transition"
-//                 >
-//                     Solve
-//                 </button>
-//             </form>
-
-//             {error && <p className="mt-4 text-red-600">{error}</p>}
-
-//             {result && (
-//                 <div className="mt-6 bg-gray-100 p-4 rounded-md">
-//                     <h2 className="font-bold text-lg">Result:</h2>
-//                     <p><strong>Path:</strong> {result.path.join(' → ')}</p>
-//                     <p><strong>Total Cost:</strong> {result.cost}</p>
-//                 </div>
-//             )}
-//         </div>
-//     );
-// }
-
 import React, { useState } from 'react';
 import axios from 'axios';
 import { BACKEND_URL } from '../config';
@@ -96,7 +5,7 @@ import { BACKEND_URL } from '../config';
 export default function TSP() {
     const cities = ['A', 'B', 'C', 'D'];
     const [method, setMethod] = useState('dfs');
-    const [start, setStart] = useState('A');
+    const [start, setStart] = useState('');
     const [result, setResult] = useState(null);
     const [error, setError] = useState('');
     const [matrix, setMatrix] = useState(() =>
@@ -124,6 +33,22 @@ export default function TSP() {
         setResult(null);
         setError('');
 
+        // Validate start node
+        if (!cities.includes(start)) {
+            setError(`Start node must be one of: ${cities.join(', ')}`);
+            return;
+        }
+
+        // Validate that all required matrix fields are filled
+        for (let from of cities) {
+            for (let to of cities) {
+                if (from !== to && matrix[from][to] === '') {
+                    setError(`Please fill all distance fields between ${from} and ${to}.`);
+                    return;
+                }
+            }
+        }
+
         try {
             // Convert string values to numbers
             const graph = {};
@@ -131,9 +56,7 @@ export default function TSP() {
                 graph[from] = {};
                 for (let to in matrix[from]) {
                     const val = matrix[from][to];
-                    if (val !== '') {
-                        graph[from][to] = parseInt(val);
-                    }
+                    graph[from][to] = parseInt(val, 10);
                 }
             }
 
@@ -149,11 +72,11 @@ export default function TSP() {
             <h1 className="text-2xl font-bold mb-4 text-center">Travelling Salesman Problem (DFS / BFS)</h1>
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                    <label className="block font-medium text-gray-700 mb-1">Choose Algorithm</label>
+                    <label className="block font-semibold text-gray-700 mb-1">Choose Algorithm</label>
                     <select
                         value={method}
                         onChange={(e) => setMethod(e.target.value)}
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        className="block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-2 py-1"
                     >
                         <option value="dfs">DFS</option>
                         <option value="bfs">BFS</option>
@@ -161,7 +84,7 @@ export default function TSP() {
                 </div>
 
                 <div>
-                    <label className="block font-medium text-gray-700 mb-2">Graph Adjacency Matrix (leave blank if no edge)</label>
+                    <label className="block font-semibold text-gray-700 mb-2">Graph Adjacency Matrix</label>
                     <div className="overflow-auto">
                         <table className="table-auto border-collapse w-full">
                             <thead>
@@ -185,7 +108,7 @@ export default function TSP() {
                                                         type="number"
                                                         value={matrix[from][to] || ''}
                                                         onChange={(e) => handleInputChange(from, to, e.target.value)}
-                                                        className="w-full border rounded px-1 py-1 text-sm"
+                                                        className="w-full border rounded px-2 py-1 text-sm text-center"
                                                     />
                                                 )}
                                             </td>
@@ -198,26 +121,28 @@ export default function TSP() {
                 </div>
 
                 <div>
-                    <label className="block font-medium text-gray-700">Start Node</label>
+                    <label className="block font-semibold text-gray-700">Start Node</label>
                     <input
                         type="text"
                         value={start}
                         onChange={(e) => setStart(e.target.value)}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 px-2 py-1"
                         placeholder="A"
                         required
                     />
                 </div>
-
-                <button
-                    type="submit"
-                    className="w-full bg-indigo-600 text-white py-2 rounded-md font-semibold hover:bg-indigo-700 transition"
-                >
-                    Solve
-                </button>
+                <div className='flex justify-center'>
+                    <button
+                        type="submit"
+                        className="w-48 bg-indigo-600 text-white py-2 rounded-md font-semibold hover:bg-indigo-700 transition"
+                    >
+                        Solve
+                    </button>
+                </div>
+        
             </form>
 
-            {error && <p className="mt-4 text-red-600">{error}</p>}
+            {error && <p className="mt-4 text-red-800">{error}</p>}
 
             {result && (
                 <div className="mt-6 bg-gray-100 p-4 rounded-md">

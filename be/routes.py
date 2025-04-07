@@ -97,23 +97,85 @@ def tsp_route():
         return jsonify({"error": str(e)}), 500
 
 # Tic Tac Toe
-# from algorithms.tic_tac_toe import best_move
-# @app.route("/api/tic-tac-toe", methods=["POST"])
-# def tic_tac_toe():
-#     data = request.json
-#     board = data.get("board")
-#     player = data.get("player")
-#     move = best_move(board, player)
-#     return jsonify({"move": move})
+from algorithms.tic_tac_toe import check_winner, is_draw, make_move
+@app.route('/api/tictactoe/move', methods=['POST'])
+def make_tic_tac_toe_move():
+    data = request.get_json()
+    board = data.get('board')
+    x = data.get('x')
+    y = data.get('y')
+    player = data.get('player')
+
+    if not isinstance(board, list) or not (0 <= x < 3) or not (0 <= y < 3) or player not in ['X', 'O']:
+        return jsonify({'error': 'Invalid input'}), 400
+
+    if not make_move(board, x, y, player):
+        return jsonify({'error': 'Invalid move'}), 400
+
+    winner = check_winner(board)
+    draw = is_draw(board) if not winner else False
+
+    return jsonify({
+        'board': board,
+        'winner': winner,
+        'is_draw': draw,
+        'next_player': None if winner or draw else ('O' if player == 'X' else 'X')
+    })
+
+
+from algorithms.tic_tac_toe_vsComputer import check_winner, is_draw, make_move, get_computer_move
+@app.route('/api/tictactoe/vs-computer', methods=['POST'])
+def play_vs_computer():
+    data = request.get_json()
+    board = data.get('board')
+    x = data.get('x')
+    y = data.get('y')
+
+    # Human always plays 'X', computer is 'O'
+    if not make_move(board, x, y, 'X'):
+        return jsonify({'error': 'Invalid move'}), 400
+
+    winner = check_winner(board)
+    draw = is_draw(board) if not winner else False
+
+    if winner or draw:
+        return jsonify({
+            'board': board,
+            'winner': winner,
+            'is_draw': draw
+        })
+
+    # Now computer makes its move
+    comp_move = get_computer_move(board, ai_player='O', human_player='X')
+    if comp_move:
+        make_move(board, comp_move[0], comp_move[1], 'O')
+
+    winner = check_winner(board)
+    draw = is_draw(board) if not winner else False
+
+    return jsonify({
+        'board': board,
+        'winner': winner,
+        'is_draw': draw
+    })
 
 # Water Jug with Hill Climbing
-# from algorithms.water_jug_hill import hill_climb
-# @app.route("/api/water-jug-hill", methods=["POST"])
-# def water_jug_hill():
-#     data = request.json
-#     goal = data.get("goal")
-#     steps = hill_climb(goal)
-#     return jsonify({"steps": steps})
+
+from algorithms.water_jug_hill import WaterJugHillClimbing
+@app.route("/api/water-jug-hill", methods=["POST"])
+def solve_water_jug_hill():
+    data = request.get_json()
+    start = tuple(data.get("start", (0, 0)))
+    goal = tuple(data.get("goal", (2, 0)))
+    capacities = data.get("capacities", [4, 3])
+
+    solver = WaterJugHillClimbing(start, capacities[0], capacities[1], goal)
+    path = solver.solve(start)
+
+    return jsonify({
+        "path": path,
+        "success": path[-1] == goal
+    })
 
 # 8 Puzzle with Greedy Best First Search
 # from algorithms.eight_puzzle_greedy import greedy_bfs

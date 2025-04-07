@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Dialog, DialogPanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link } from "react-router-dom";
-import AppBar from './AppBar';
 const navigation = [
     { name: 'Home', href: '/' },
     { name: 'Algorithms', href: '/#algorithms' },
@@ -15,7 +14,6 @@ export function Landing(){
     return (
         <div className="bg-white">
             <header className="absolute inset-x-0 top-0 z-50">
-                <AppBar />
                 <Dialog as="div" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
                     <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full bg-white px-6 py-6 sm:max-w-sm">
                         <div className="flex items-center justify-between">

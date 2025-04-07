@@ -11,11 +11,6 @@ export default function Login() {
                     />
                 </div>
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm text-center">
-                    <a href="#" className="-m-1.5 p-1.5 inline-block">
-                        <span className="h-10 w-auto text-4xl font-extrabold bg-gradient-to-r from-indigo-800 via-purple-500 to-black text-transparent bg-clip-text tracking-tight drop-shadow-md">
-                            AIMLabX
-                        </span>
-                    </a>
                     <h2 className="mt-10 text-2xl/9 font-bold tracking-tight text-gray-900">
                         Sign in to your account
                     </h2>
