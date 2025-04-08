@@ -7,6 +7,7 @@ import TicTacToe from './pages/TicTacToe';
 import WaterJugHill from './pages/WaterJugHill';
 import EightPuzzleSolver from './pages/EightPuzzleSolver';
 import AstarEightPuzzle from './pages/astar_eight_puzzle';
+import MarcusResolver from './pages/MarcusResolver';
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
         <Route path='/water-jug-hill' element={<WaterJugHill/>}/>
         <Route path='/eight-puzzle-gbfs' element={<EightPuzzleSolver/>} />
         <Route path='/astar-eight-puzzle' element={<AstarEightPuzzle/>}/>
+        <Route path='/marcus-resolver' element={<MarcusResolver/>}/>
       </Routes>
     </BrowserRouter>
   )

@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 const navigation = [
     { name: 'Home', href: '/' },
     { name: 'Algorithms', href: '/algorithms' },
-    { name: 'Visualizations', href: '/visualizations' },
     { name: 'About', href: '/about' },
 ];
 

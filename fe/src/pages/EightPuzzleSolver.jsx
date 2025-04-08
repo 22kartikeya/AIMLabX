@@ -15,6 +15,7 @@ const EightPuzzleSolver = () => {
     const [goal, setGoal] = useState(EmptyBoard);
     const [solution, setSolution] = useState([]);
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleChange = (boardType, row, col, value) => {
         const originalBoard = boardType === 'start' ? start : goal;
@@ -22,9 +23,12 @@ const EightPuzzleSolver = () => {
         newBoard[row][col] = value === '' ? '' : parseInt(value);
         boardType === 'start' ? setStart(newBoard) : setGoal(newBoard);
     };
- 
+
     const handleSubmit = async () => {
         try {
+            setIsLoading(true);
+            setError('');
+            setSolution([]);
             const payload = { start, goal };
             const response = await axios.post(`${BACKEND_URL}/api/eight-puzzle-gbfs`, payload);
             const { success, path } = response.data;
@@ -34,12 +38,13 @@ const EightPuzzleSolver = () => {
                 setSolution([]);
             } else {
                 setSolution(path);
-                setError('');
             }
         } catch (err) {
             console.error(err);
             setError('Invalid input or no solution found');
             setSolution([]);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -103,13 +108,20 @@ const EightPuzzleSolver = () => {
                 <button
                     onClick={handleSubmit}
                     className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition duration-200 mb-6"
+                    disabled={isLoading}
                 >
-                    Solve Puzzle
+                    {isLoading ? 'Solving...' : 'Solve Puzzle'}
                 </button>
 
                 {error && <p className="text-red-600 font-semibold">{error}</p>}
 
-                {solution.length > 0 && (
+                {isLoading && (
+                    <p className="text-center font-medium text-gray-600 animate-pulse mb-6">
+                        Preparing solution...
+                    </p>
+                )}
+
+                {!isLoading && solution.length > 0 && (
                     <div>
                         <h2 className="text-xl font-semibold mb-4">Solution ({solution.length} steps):</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

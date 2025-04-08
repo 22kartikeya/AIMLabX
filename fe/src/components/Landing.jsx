@@ -4,8 +4,7 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link } from "react-router-dom";
 const navigation = [
     { name: 'Home', href: '/' },
-    { name: 'Algorithms', href: '/#algorithms' },
-    { name: 'Visualizations', href: '/#visualizations' },
+    { name: 'Algorithms', href: '/algorithms' },
     { name: 'About', href: '/about' },
 ];
 
@@ -86,7 +85,7 @@ export function Landing(){
                                 { to: "/water-jug-hill", title: "Water Jug problem using Hill climbing" },
                                 { to: "/eight-puzzle-gbfs", title: "8 Puzzle problem using Greedy Best first Search" },
                                 { to: "/astar-eight-puzzle", title: "A* Algorithm for Water jug and 8 Puzzle" },
-                                { to: "/predicate-resolution", title: "Resolution of Marcus Problem of Predicate logic" },
+                                { to: "/marcus-resolver", title: "Resolution of Marcus Problem of Predicate logic" },
                             ].map(({ to, title }) => (
                                 <Link
                                     key={to}

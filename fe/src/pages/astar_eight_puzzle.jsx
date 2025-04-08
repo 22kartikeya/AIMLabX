@@ -5,21 +5,22 @@ import { motion, AnimatePresence } from "framer-motion";
 import { BACKEND_URL } from "../config";
 
 const EmptyBoard = [
-    ['', '', ''],
-    ['', '', ''],
-    ['', '', ''],
+    ["", "", ""],
+    ["", "", ""],
+    ["", "", ""],
 ];
 
 export default function AstarEightPuzzle() {
     const [isPuzzle, setIsPuzzle] = useState(true);
     const [start, setStart] = useState(EmptyBoard);
     const [goal, setGoal] = useState(EmptyBoard);
-    const [jugStart, setJugStart] = useState([ ]);
-    const [jugGoal, setJugGoal] = useState([ ]);
-    const [jugCapacity, setJugCapacity] = useState([ ]);
+    const [jugStart, setJugStart] = useState([]);
+    const [jugGoal, setJugGoal] = useState([]);
+    const [jugCapacity, setJugCapacity] = useState([]);
     const [result, setResult] = useState(null);
     const [error, setError] = useState("");
     const [animatedPath, setAnimatedPath] = useState([]);
+    // eslint-disable-next-line no-unused-vars
     const [animationRunning, setAnimationRunning] = useState(false);
 
     const handleChange = (boardType, row, col, value) => {
@@ -33,6 +34,7 @@ export default function AstarEightPuzzle() {
         e.preventDefault();
         setResult(null);
         setError("");
+        setAnimatedPath([]);
 
         try {
             const res = await axios.post(
@@ -45,11 +47,17 @@ export default function AstarEightPuzzle() {
                         capacity: jugCapacity,
                     }
             );
-            setResult(res.data);
+
+            if (res.data?.path && res.data.path.length > 0) {
+                setResult(res.data);
+            } else {
+                setError("Answer not possible");
+                setResult(null);
+            }
         } catch (err) {
-            setResult(null);
             console.error(err);
-            setError({error: "Invalid input or no solution found"});
+            setResult(null);
+            setError("Invalid input or no solution found");
         }
     };
 
@@ -62,10 +70,9 @@ export default function AstarEightPuzzle() {
             const interval = setInterval(() => {
                 if (i < result.path.length) {
                     const state = result.path[i];
-                    // Push any valid state (either 2D array or 2-element array)
                     if (
-                        (isPuzzle && Array.isArray(state) && Array.isArray(state[0])) || // 8 Puzzle step
-                        (!isPuzzle && Array.isArray(state) && state.length === 2)       // Water Jug step
+                        (isPuzzle && Array.isArray(state) && Array.isArray(state[0])) ||
+                        (!isPuzzle && Array.isArray(state) && state.length === 2)
                     ) {
                         setAnimatedPath((prev) => [...prev, state]);
                     }
@@ -80,10 +87,9 @@ export default function AstarEightPuzzle() {
         }
     }, [result, isPuzzle]);
 
-
     const renderInputGrid = (boardType) => (
         <div className="grid grid-cols-3 gap-1">
-            {(boardType === 'start' ? start : goal).map((row, i) =>
+            {(boardType === "start" ? start : goal).map((row, i) =>
                 row.map((cell, j) => (
                     <input
                         key={`${i}-${j}-${boardType}`}
@@ -107,14 +113,14 @@ export default function AstarEightPuzzle() {
                     type="number"
                     value={value[0]}
                     onChange={(e) => onChange([parseInt(e.target.value) || 0, value[1]])}
-                    className="border p-2 w-full"
+                    className="border p-2 w-full rounded-lg"
                     placeholder="Jug 1"
                 />
                 <input
                     type="number"
                     value={value[1]}
                     onChange={(e) => onChange([value[0], parseInt(e.target.value) || 0])}
-                    className="border p-2 w-full"
+                    className="border p-2 w-full rounded-lg"
                     placeholder="Jug 2"
                 />
             </div>
@@ -161,9 +167,7 @@ export default function AstarEightPuzzle() {
                         ({state[0]}, {state[1]})
                     </span>
                     {index !== animatedPath.length - 1 && (
-                        <span className="text-lg font-bold text-gray-600">
-                            →
-                        </span>
+                        <span className="text-lg font-bold text-gray-600">→</span>
                     )}
                 </motion.div>
             );
@@ -172,16 +176,14 @@ export default function AstarEightPuzzle() {
 
     return (
         <div className="relative min-h-screen">
-            <div
-                aria-hidden="true"
-                className="fixed inset-0 -z-10"
-            >
-                <div
-                    className="absolute inset-0 left-0 top-0 h-screen w-30 rotate-[0deg] bg-gradient-to-br from-[#ff80b5] to-[#8c84f1] opacity-40 blur-3xl"
-                />
+            <div aria-hidden="true" className="fixed inset-0 -z-10">
+                <div className="absolute inset-0 left-0 top-0 h-screen w-30 rotate-[0deg] bg-gradient-to-br from-[#ff80b5] to-[#8c84f1] opacity-40 blur-3xl" />
             </div>
+
             <div className="p-8 max-w-4xl mx-auto">
-                <h1 className="text-2xl font-bold mb-6 text-center z-10">A* Algorithm Visualiser</h1>
+                <h1 className="text-2xl font-bold mb-6 text-center z-10">
+                    A* Algorithm Visualiser
+                </h1>
 
                 <div className="flex justify-center">
                     <motion.button
@@ -198,18 +200,16 @@ export default function AstarEightPuzzle() {
                     </motion.button>
                 </div>
 
-                <form
-                    onSubmit={handleSubmit}
-                >
+                <form onSubmit={handleSubmit}>
                     {isPuzzle ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div className="p-4 border rounded-lg shadow bg-white/70 backdrop-blur-sm">
                                 <h2 className="text-lg font-semibold mb-2">Start State</h2>
-                                {renderInputGrid('start')}
+                                {renderInputGrid("start")}
                             </div>
                             <div className="p-4 border rounded-lg shadow bg-white/70 backdrop-blur-sm">
                                 <h2 className="text-lg font-semibold mb-2">Goal State</h2>
-                                {renderInputGrid('goal')}
+                                {renderInputGrid("goal")}
                             </div>
                         </div>
                     ) : (
@@ -228,55 +228,37 @@ export default function AstarEightPuzzle() {
                     </button>
                 </form>
 
-                {error && <p className="text-red-600 font-semibold text-center mt-4">{error}</p>}
+                {error && !result && (
+                    <p className="text-red-600 font-semibold text-center mt-4">{error}</p>
+                )}
+
+                {result && animatedPath.length === 0 && (
+                    <p className="text-center font-medium text-gray-600 animate-pulse">
+                        Preparing solution...
+                    </p>
+                )}
 
                 {animatedPath.length > 0 && (
-                    isPuzzle ? (
-                        <div>
-                            <h2 className="text-xl font-semibold mb-4">
-                                Solution ({animatedPath.length} steps):
-                            </h2>
+                    <div>
+                        <h2 className="text-xl font-semibold mb-4">
+                            Solution ({animatedPath.length} steps):
+                        </h2>
+                        {isPuzzle ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                                 <AnimatePresence>
                                     {animatedPath.map((state, index) => renderStep(state, index))}
                                 </AnimatePresence>
                             </div>
-                        </div>
-                    ) : (
-                        <div>
-                            <h2 className="text-xl font-semibold mb-4">
-                                Solution ({animatedPath.length} steps):
-                            </h2>
+                        ) : (
                             <div className="flex flex-wrap gap-3 items-center">
                                 <AnimatePresence>
-                                    {animatedPath.map((state, idx) =>
-                                        Array.isArray(state) && state.length === 2 ? (
-                                            <motion.div
-                                                key={idx}
-                                                initial={{ scale: 0.5, opacity: 0 }}
-                                                animate={{ scale: 1, opacity: 1 }}
-                                                exit={{ scale: 0.5, opacity: 0 }}
-                                                transition={{ duration: 0.4 }}
-                                                className="flex items-center space-x-2"
-                                            >
-                                                <span className="px-3 py-2 border rounded-lg bg-slate-50 font-mono text-sm font-semibold">
-                                                    ({state[0]}, {state[1]})
-                                                </span>
-                                                {idx !== animatedPath.length - 1 && (
-                                                    <span className="text-lg font-bold text-gray-600">
-                                                        →
-                                                    </span>
-                                                )}
-                                            </motion.div>
-                                        ) : null
-                                    )}
+                                    {animatedPath.map((state, index) => renderStep(state, index))}
                                 </AnimatePresence>
                             </div>
-                        </div>
-                    )
+                        )}
+                    </div>
                 )}
             </div>
         </div>
     );
 }
-
