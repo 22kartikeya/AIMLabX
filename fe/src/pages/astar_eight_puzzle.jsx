@@ -175,9 +175,14 @@ export default function AstarEightPuzzle() {
     };
 
     return (
-        <div className="relative min-h-screen">
+        <div className="relative min-h-screen px-6 pt-16 pb-6 lg:px-8">
             <div aria-hidden="true" className="fixed inset-0 -z-10">
-                <div className="absolute inset-0 left-0 top-0 h-screen w-30 rotate-[0deg] bg-gradient-to-br from-[#ff80b5] to-[#8c84f1] opacity-40 blur-3xl" />
+                <div
+                    aria-hidden="true"
+                    className="absolute inset-x-0 -top-500 overflow-hidden blur-3xl -z-10"
+                >
+                    <div className="relative left-0 top-0 h-[700px] rotate-[0deg] bg-gradient-to-br from-[#ff80b5] to-[#8c84f1] opacity-60 blur-2xl" />
+                </div>
             </div>
 
             <div className="p-8 max-w-4xl mx-auto">

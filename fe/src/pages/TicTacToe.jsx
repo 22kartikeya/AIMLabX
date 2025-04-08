@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
+import confetti from "canvas-confetti";
 import { BACKEND_URL } from '../config';
 
 export default function TicTacToe() {
@@ -11,6 +12,17 @@ export default function TicTacToe() {
     const [currentPlayer, setCurrentPlayer] = useState('X');
     const [winner, setWinner] = useState(null);
     const [mode, setMode] = useState('PVP'); // 'PVP' or 'PVC'
+
+    useEffect(() => {
+        if (winner && winner !== 'Draw') {
+            confetti({
+                particleCount: 200,
+                spread: 80,
+                origin: { y: 0.6 },
+                scalar: 1.6, // <- increased size
+            });
+        }
+    }, [winner]);
 
     const handleClick = async (row, col) => {
         if (board[row][col] !== '' || winner) return;
@@ -38,7 +50,7 @@ export default function TicTacToe() {
                 const { board: newBoard, winner: win, is_draw } = response.data;
                 setBoard(newBoard);
                 setWinner(win || (is_draw ? 'Draw' : null));
-                if (!win && !is_draw) setCurrentPlayer('X'); // Always X for player
+                if (!win && !is_draw) setCurrentPlayer('X');
             }
         } catch (err) {
             console.error("Move error:", err.response?.data || err.message);
@@ -66,15 +78,13 @@ export default function TicTacToe() {
                 aria-hidden="true"
                 className="absolute inset-x-0 -top-500 overflow-hidden blur-3xl"
             >
-                <div
-                    className="relative left-0 top-0 h-screen w-30 rotate-[0deg] bg-gradient-to-br from-[#ff80b5] to-[#8c84f1] opacity-60 blur-3xl"
-                />
+                <div className="relative left-0 top-0 h-[700px] rotate-[0deg] bg-gradient-to-br from-[#ff80b5] to-[#8c84f1] opacity-60 blur-2xl" />
             </div>
             <h1 className="text-3xl font-bold mb-6 relative z-10">Tic Tac Toe</h1>
 
             <div className="relative z-10 flex space-x-4 mb-6">
                 <button
-                    className={`px-4 py-2 rounded ${mode === 'PVP' ? 'bg-indigo-600 text-white' : 'bg-white text-indigo-600 border-indigo-600'}`}
+                    className={`px-4 py-2 rounded ${mode === 'PVP' ? 'bg-indigo-600 text-white' : 'bg-white text-indigo-600 border border-indigo-600'}`}
                     onClick={() => handleModeChange('PVP')}
                 >
                     2 Players
@@ -110,7 +120,7 @@ export default function TicTacToe() {
             <div className="h-8 mt-2 text-xl font-semibold relative z-10 flex items-center justify-center">
                 {winner && (
                     <span>
-                        {winner === 'Draw' ? "It's a Draw!" : `Winner: ${winner}`}
+                        {winner === 'Draw' ? "It's a Draw!" : `🎉 Winner: ${winner} 🎉`}
                     </span>
                 )}
             </div>

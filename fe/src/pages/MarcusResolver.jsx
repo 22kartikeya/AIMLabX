@@ -31,12 +31,18 @@ const MarcusResolver = () => {
         }
     };
 
+    const handleSampleInput = () => {
+        setPremises(`all x (man(x) -> mortal(x))\nall x (greek(x) -> man(x))\ngreek(marcus)`);
+        setGoal("mortal(marcus)");
+    };
+
     return (
         <div className="min-h-screen w-full flex items-center justify-center relative isolate px-6 pt-2 lg:px-8">
             <div
                 aria-hidden="true"
-                className="absolute inset-0 z-0 rotate-[0deg] bg-gradient-to-br from-[#ff80b5] to-[#8c84f1] opacity-60 blur-3xl"
+                className="absolute inset-x-0 -top-500 overflow-hidden blur-3xl -z-10"
             >
+                <div className="relative left-0 top-0 h-[700px] rotate-[0deg] bg-gradient-to-br from-[#ff80b5] to-[#8c84f1] opacity-60 blur-2xl" />
             </div>
 
             <motion.div
@@ -68,12 +74,22 @@ const MarcusResolver = () => {
                     placeholder="Enter goal statement"
                     className="w-full p-3 border border-gray-300 rounded-lg mb-4 bg-white/80 backdrop-blur-sm"
                 />
-                <button
-                    onClick={handleSubmit}
-                    className="px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition w-full font-medium"
-                >
-                    Resolve Logic
-                </button>
+
+                <div className="flex flex-col sm:flex-row gap-4 mb-4">
+                    <button
+                        onClick={handleSampleInput}
+                        className="w-full sm:w-auto px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition font-medium"
+                    >
+                        Use Sample Input
+                    </button>
+
+                    <button
+                        onClick={handleSubmit}
+                        className="w-full sm:w-auto px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition font-medium"
+                    >
+                        Resolve Logic
+                    </button>
+                </div>
 
                 {loading && (
                     <motion.p
@@ -103,7 +119,7 @@ const MarcusResolver = () => {
                             🧩 Explanation Breakdown:
                         </h3>
 
-                        <ul className="list-disc list-inside text-gray-900">
+                        <ul className="list-inside text-gray-900">
                             {result.explanation.map((step, index) => (
                                 <li key={index} className="mb-1">{step}</li>
                             ))}

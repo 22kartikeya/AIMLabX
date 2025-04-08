@@ -77,9 +77,10 @@ export default function TSP() {
         <div className="min-h-screen w-full flex items-center justify-center relative isolate px-6 pt-2 lg:px-8">
             <div
                 aria-hidden="true"
-                className="absolute inset-0 z-0 rotate-[0deg] bg-gradient-to-br from-[#ff80b5] to-[#8c84f1] opacity-60 blur-3xl"
-            />
-
+                className="absolute inset-x-0 -top-500 overflow-hidden blur-3xl"
+            >
+                <div className="relative left-0 top-0 h-[700px] rotate-[0deg] bg-gradient-to-br from-[#ff80b5] to-[#8c84f1] opacity-60 blur-2xl" />
+            </div>
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}

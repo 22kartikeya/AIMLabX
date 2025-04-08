@@ -76,11 +76,9 @@ export default function WaterJugHill() {
         <div className="flex flex-col items-center justify-center min-h-screen relative isolate px-2 pt-0 lg:px-8">
             <div
                 aria-hidden="true"
-                className="absolute inset-0 -z-10 overflow-hidden blur-3xl"
+                className="absolute inset-x-0 -top-500 overflow-hidden blur-3xl"
             >
-                <div
-                    className="absolute top-0 left-0 h-full w-full bg-gradient-to-br from-[#ff80b5] to-[#8c84f1] opacity-50"
-                />
+                <div className="relative left-0 top-0 h-[600px] rotate-[0deg] bg-gradient-to-br from-[#ff80b5] to-[#8c84f1] opacity-60 blur-2xl" />
             </div>
             <div className="relative max-w-xl mx-auto px-6 lg:px-8 z-10">
                 <h1 className="text-2xl font-bold mb-6 text-center">

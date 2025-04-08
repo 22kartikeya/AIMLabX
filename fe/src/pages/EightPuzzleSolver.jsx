@@ -85,11 +85,9 @@ const EightPuzzleSolver = () => {
         <div className="relative min-h-screen">
             <div
                 aria-hidden="true"
-                className="fixed inset-0 -z-10"
+                className="absolute inset-x-0 -top-500 overflow-hidden blur-3xl -z-10"
             >
-                <div
-                    className="absolute inset-0 left-0 top-0 h-screen w-30 rotate-[0deg] bg-gradient-to-br from-[#ff80b5] to-[#8c84f1] opacity-40 blur-3xl"
-                />
+                <div className="relative left-0 top-0 h-[700px] rotate-[0deg] bg-gradient-to-br from-[#ff80b5] to-[#8c84f1] opacity-60 blur-2xl" />
             </div>
             <div className="p-8 max-w-4xl mx-auto">
                 <h1 className="text-2xl font-bold mb-6 text-center z-10">8 Puzzle Solver (Greedy Best First Search)</h1>
