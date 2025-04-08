@@ -1,120 +1,116 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { motion, AnimatePresence } from 'framer-motion';
+// eslint-disable-next-line no-unused-vars
+import { motion } from 'framer-motion';
 import { BACKEND_URL } from '../config';
 
 const MarcusResolver = () => {
-    const [premises, setPremises] = useState(["all x (man(x) -> mortal(x))", "man(marcus)"]);
-    const [goal, setGoal] = useState("mortal(marcus)");
+    const [premises, setPremises] = useState('');
+    const [goal, setGoal] = useState('');
     const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(null);
-    const [error, setError] = useState("");
+    const [result, setResult] = useState(null);
 
-    const handlePremiseChange = (value, index) => {
-        const updated = [...premises];
-        updated[index] = value;
-        setPremises(updated);
-    };
-
-    const addPremise = () => setPremises([...premises, ""]);
-
-    const handleResolve = async () => {
+    const handleSubmit = async () => {
         setLoading(true);
-        setSuccess(null);
-        setError("");
+        setResult(null);
 
         try {
-            const response = await axios.post(`${BACKEND_URL}/api/marcus`, { premises, goal });
-            setSuccess(response.data.success);
-            setError(response.data.error || "");
+            const response = await axios.post(`${BACKEND_URL}/api/custom-logic`, {
+                premises: premises.split('\n').filter(Boolean),
+                goal: goal
+            });
+
+            setTimeout(() => {
+                setResult(response.data);
+                setLoading(false);
+            }, 1200);
+
         } catch (err) {
-            setSuccess(false);
-            console.log(err);
-            setError("An error occurred");
-        } finally {
+            console.error("Error:", err);
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-6 space-y-4">
-            <motion.h1
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="text-2xl font-bold mb-4"
+        <div className="min-h-screen w-full flex items-center justify-center relative isolate px-6 pt-2 lg:px-8">
+            <div
+                aria-hidden="true"
+                className="absolute inset-0 z-0 rotate-[0deg] bg-gradient-to-br from-[#ff80b5] to-[#8c84f1] opacity-60 blur-3xl"
             >
-                Marcus Logic Resolver
-            </motion.h1>
+            </div>
 
-            <div className="w-full max-w-2xl space-y-4">
-                <h2 className="text-lg font-semibold">Premises</h2>
-                {premises.map((p, idx) => (
-                    <input
-                        key={idx}
-                        type="text"
-                        value={p}
-                        onChange={(e) => handlePremiseChange(e.target.value, idx)}
-                        className="w-full p-2 border rounded-lg shadow"
-                        placeholder={`Premise ${idx + 1}`}
-                    />
-                ))}
-                <button onClick={addPremise} className="text-sm text-indigo-700 underline">
-                    + Add Premise
-                </button>
+            <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.9 }}
+                className="w-full max-w-2xl rounded-2xl border border-white/20 bg-white/30 backdrop-blur-xl shadow-xl p-6"
+            >
+                <motion.h1
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-2xl font-bold mb-6 text-center text-gray-800"
+                >
+                    Marcus Logic Resolver
+                </motion.h1>
 
-                <h2 className="text-lg font-semibold">Goal</h2>
+                <textarea
+                    value={premises}
+                    onChange={(e) => setPremises(e.target.value)}
+                    placeholder="Enter premises (one per line)"
+                    className="w-full p-3 border border-gray-300 rounded-lg mb-4 bg-white/80 backdrop-blur-sm"
+                    rows={4}
+                />
                 <input
                     type="text"
                     value={goal}
                     onChange={(e) => setGoal(e.target.value)}
-                    className="w-full p-2 border rounded-lg shadow"
-                    placeholder="Goal (e.g. mortal(marcus))"
+                    placeholder="Enter goal statement"
+                    className="w-full p-3 border border-gray-300 rounded-lg mb-4 bg-white/80 backdrop-blur-sm"
                 />
-
                 <button
-                    onClick={handleResolve}
-                    className="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+                    onClick={handleSubmit}
+                    className="px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition w-full font-medium"
                 >
                     Resolve Logic
                 </button>
 
-                <div className="mt-6">
-                    <AnimatePresence>
-                        {loading && (
-                            <motion.p
-                                className="text-gray-600 text-lg animate-pulse"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                            >
-                                Preparing solution...
-                            </motion.p>
-                        )}
+                {loading && (
+                    <motion.p
+                        className="mt-4 text-gray-700 font-medium animate-pulse text-center"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                    >
+                        Resolving...
+                    </motion.p>
+                )}
 
-                        {success === true && !loading && (
-                            <motion.div
-                                className="text-green-700 font-semibold mt-4"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                            >
-                                ✔ The logic is valid (proved).
-                            </motion.div>
-                        )}
+                {result && (
+                    <motion.div
+                        className="mt-6 bg-white/70 backdrop-blur-md shadow-md rounded-lg p-4"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <h2
+                            className={`text-xl font-semibold mb-2 ${result.success ? 'text-green-600' : 'text-red-600'
+                                }`}
+                        >
+                            {result.success ? "✔ Logic Proven!" : "✘ Could Not Prove"}
+                        </h2>
 
-                        {success === false && !loading && (
-                            <motion.div
-                                className="text-red-600 font-semibold mt-4"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                            >
-                                ✘ Could not prove the logic.
-                                {error && <p className="text-sm text-gray-500 mt-1">{error}</p>}
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
-            </div>
+                        <h3 className="text-lg font-bold mt-4 mb-2 text-gray-800">
+                            🧩 Explanation Breakdown:
+                        </h3>
+
+                        <ul className="list-disc list-inside text-gray-900">
+                            {result.explanation.map((step, index) => (
+                                <li key={index} className="mb-1">{step}</li>
+                            ))}
+                        </ul>
+                    </motion.div>
+                )}
+            </motion.div>
         </div>
     );
 };

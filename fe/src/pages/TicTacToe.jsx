@@ -74,13 +74,13 @@ export default function TicTacToe() {
 
             <div className="relative z-10 flex space-x-4 mb-6">
                 <button
-                    className={`px-4 py-2 rounded ${mode === 'PVP' ? 'bg-blue-600 text-white' : 'bg-white text-blue-600 border border-blue-600'}`}
+                    className={`px-4 py-2 rounded ${mode === 'PVP' ? 'bg-indigo-600 text-white' : 'bg-white text-indigo-600 border-indigo-600'}`}
                     onClick={() => handleModeChange('PVP')}
                 >
                     2 Players
                 </button>
                 <button
-                    className={`px-4 py-2 rounded ${mode === 'PVC' ? 'bg-blue-600 text-white' : 'bg-white text-blue-600 border border-blue-600'}`}
+                    className={`px-4 py-2 rounded ${mode === 'PVC' ? 'bg-indigo-600 text-white' : 'bg-white text-indigo-600 border border-indigo-600'}`}
                     onClick={() => handleModeChange('PVC')}
                 >
                     Vs Computer
@@ -103,7 +103,7 @@ export default function TicTacToe() {
 
             <button
                 onClick={resetGame}
-                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 relative z-10"
+                className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 relative z-10"
             >
                 Restart
             </button>

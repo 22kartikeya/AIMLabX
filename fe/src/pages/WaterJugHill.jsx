@@ -95,7 +95,7 @@ export default function WaterJugHill() {
 
                 <button
                     onClick={handleSolve}
-                    className="bg-blue-600 text-white px-4 py-2 mb-4 rounded-lg hover:bg-blue-700 w-full"
+                    className="bg-indigo-600 text-white px-4 py-2 mb-4 rounded-lg hover:bg-indigo-700 w-full"
                     disabled={animationRunning}
                 >
                     Solve

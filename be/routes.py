@@ -229,11 +229,10 @@ def solve_eight_puzzle_astar():
 
 # Marcus Resolution (Predicate Logic)
 from algorithms.predicate_resolution import prove_custom_logic
-@app.route('/api/marcus', methods=['POST'])
+@app.route('/api/custom-logic', methods=['POST'])
 def resolve_custom_logic():
     data = request.get_json()
     premises = data.get("premises", [])
     goal = data.get("goal", "")
-
     result = prove_custom_logic(premises, goal)
     return jsonify(result)
