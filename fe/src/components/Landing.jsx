@@ -84,8 +84,8 @@ export function Landing(){
                                 { to: "/tsp", title: "DFS and BFS for Travelling Saleman Problem" },
                                 { to: "/tic-tac-toe", title: "Tic Tac Toe Program" },
                                 { to: "/water-jug-hill", title: "Water Jug problem using Hill climbing" },
-                                { to: "/eight-puzzle-greedy", title: "8 Puzzle problem using Greedy Best first Search" },
-                                { to: "/astar", title: "A* Algorithm for Water jug and 8 Puzzle" },
+                                { to: "/eight-puzzle-gbfs", title: "8 Puzzle problem using Greedy Best first Search" },
+                                { to: "/astar-eight-puzzle", title: "A* Algorithm for Water jug and 8 Puzzle" },
                                 { to: "/predicate-resolution", title: "Resolution of Marcus Problem of Predicate logic" },
                             ].map(({ to, title }) => (
                                 <Link

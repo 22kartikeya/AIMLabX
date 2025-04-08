@@ -1,37 +1,69 @@
 import heapq
 
-goal_state = [[1,2,3],[4,5,6],[7,8,0]]
+class Puzzle:
+    def __init__(self, board, goal, path=None):
+        self.board = board
+        self.goal = goal
+        self.n = len(board)
+        self.empty_tile = self.find_empty()
+        self.path = path or [board]
 
-def heuristic(state):
-    distance = 0
-    for i in range(3):
-        for j in range(3):
-            val = state[i][j]
-            if val != 0:
-                goal_i, goal_j = divmod(val-1, 3)
-                distance += abs(i - goal_i) + abs(j - goal_j)
-    return distance
+    def find_empty(self):
+        for i in range(self.n):
+            for j in range(self.n):
+                if self.board[i][j] == 0:
+                    return i, j
+        return None
 
-def get_neighbors(state):
-    i, j = next((i, j) for i in range(3) for j in range(3) if state[i][j] == 0)
-    directions = [(-1,0), (1,0), (0,-1), (0,1)]
-    neighbors = []
-    for dx, dy in directions:
-        ni, nj = i + dx, j + dy
-        if 0 <= ni < 3 and 0 <= nj < 3:
-            new_state = [row[:] for row in state]
-            new_state[i][j], new_state[ni][nj] = new_state[ni][nj], new_state[i][j]
-            neighbors.append(new_state)
-    return neighbors
+    def heuristic(self):
+        dist = 0
+        goal_positions = {self.goal[i][j]: (i, j) for i in range(self.n) for j in range(self.n)}
+        for i in range(self.n):
+            for j in range(self.n):
+                if self.board[i][j] != 0:
+                    x, y = goal_positions[self.board[i][j]]
+                    dist += abs(x - i) + abs(y - j)
+        return dist
 
-def greedy_bfs(start):
-    heap = [(heuristic(start), start, [])]
+    def get_neighbors(self):
+        x, y = self.empty_tile
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        neighbors = []
+        for dx, dy in directions:
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < self.n and 0 <= ny < self.n:
+                new_board = [row[:] for row in self.board]
+                new_board[x][y], new_board[nx][ny] = new_board[nx][ny], new_board[x][y]
+                neighbors.append(Puzzle(new_board, self.goal, self.path + [new_board]))
+        return neighbors
+
+    def __lt__(self, other):
+        return self.heuristic() < other.heuristic()
+
+    def __eq__(self, other):
+        return self.board == other.board
+
+    def __hash__(self):
+        return hash(tuple(map(tuple, self.board)))
+
+
+def greedy_best_first_search(start, goal):
+    start_puzzle = Puzzle(start, goal)
+    goal_state = goal
+
+    open_list = []
+    heapq.heappush(open_list, (start_puzzle.heuristic(), start_puzzle))
     visited = set()
-    while heap:
-        h, current, path = heapq.heappop(heap)
-        if current == goal_state:
-            return path + [current]
-        visited.add(str(current))
-        for neighbor in get_neighbors(current):
-            if str(neighbor) not in visited:
-                heapq.heappush(heap, (heuristic(neighbor), neighbor, path + [current]))
+
+    while open_list:
+        _, current = heapq.heappop(open_list)
+        if current.board == goal_state:
+            return {"success": True, "path": current.path}
+
+        visited.add(current)
+
+        for neighbor in current.get_neighbors():
+            if neighbor not in visited:
+                heapq.heappush(open_list, (neighbor.heuristic(), neighbor))
+
+    return {"success": False, "path": []}

@@ -160,7 +160,6 @@ def play_vs_computer():
     })
 
 # Water Jug with Hill Climbing
-
 from algorithms.water_jug_hill import WaterJugHillClimbing
 @app.route("/api/water-jug-hill", methods=["POST"])
 def solve_water_jug_hill():
@@ -177,35 +176,56 @@ def solve_water_jug_hill():
         "success": path[-1] == goal
     })
 
-# 8 Puzzle with Greedy Best First Search
-# from algorithms.eight_puzzle_greedy import greedy_bfs
-# @app.route("/api/eight-puzzle-greedy", methods=["POST"])
-# def eight_puzzle_greedy():
-#     data = request.json
-#     start = tuple(data.get("start"))
-#     goal = tuple(data.get("goal"))
-#     result = greedy_bfs(start, goal)
-#     return jsonify(result)
+# 8 Puzzle problem using Greedy Best First Search
+from algorithms.eight_puzzle_greedy import greedy_best_first_search
+@app.route("/api/eight-puzzle-gbfs", methods=["POST"])
+def solve_eight_puzzle_gbfs():
+    data = request.get_json()
+    start = data.get("start")
+    goal = data.get("goal")
+    if not start or not goal:
+        return jsonify({"error": "Start and goal states are required"}), 400
+    result = greedy_best_first_search(start, goal)
+    return jsonify({
+        "path": result["path"],
+        "success": result["success"]
+    })
 
-# A* for Water Jug
-# from algorithms.astar_water_jug import a_star_water_jug
-# @app.route("/api/astar-water-jug", methods=["POST"])
-# def astar_water_jug():
-#     data = request.json
-#     start = tuple(data.get("start"))
-#     goal = tuple(data.get("goal"))
-#     result = a_star_water_jug(start, goal)
-#     return jsonify(result)
+from algorithms.astar_eight_puzzle import WaterJug, a_star_puzzle
+@app.route("/api/water-jug-astar", methods=["POST"])
+def astar_water_jug_api():
+    data = request.get_json()
 
-# A* for 8 Puzzle
-# from algorithms.astar_eight_puzzle import a_star_8_puzzle
-# @app.route("/api/astar-eight-puzzle", methods=["POST"])
-# def astar_eight_puzzle():
-#     data = request.json
-#     start = tuple(data.get("start"))
-#     goal = tuple(data.get("goal"))
-#     result = a_star_8_puzzle(start, goal)
-#     return jsonify(result)
+    try:
+        start = tuple(data["start"])
+        goal = tuple(data["goal"])
+        capacity = tuple(data["capacity"])  # (jug1, jug2)
+
+        solver = WaterJug(capacity[0], capacity[1], start, goal)
+        result = solver.a_star_search()
+
+        return jsonify(result), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
+@app.route('/api/eight-puzzle-astar', methods=['POST'])
+def solve_eight_puzzle_astar():
+    try:
+        data = request.json
+        start = data.get('start')
+        goal = data.get('goal')
+
+        if not start or not goal:
+            raise ValueError("Missing 'start' or 'goal' board.")
+
+        result = a_star_puzzle(start, goal)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+
+
 
 # Marcus Resolution (Predicate Logic)
 # from algorithms.predicate_resolution import resolve_marcus

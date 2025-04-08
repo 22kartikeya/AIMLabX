@@ -5,6 +5,8 @@ import TSP from './pages/TSP';
 import AppBar from './components/AppBar';
 import TicTacToe from './pages/TicTacToe';
 import WaterJugHill from './pages/WaterJugHill';
+import EightPuzzleSolver from './pages/EightPuzzleSolver';
+import AstarEightPuzzle from './pages/astar_eight_puzzle';
 
 function App() {
 
@@ -17,6 +19,8 @@ function App() {
         <Route path="/tsp" element={<TSP/>} />
         <Route path='/tic-tac-toe' element={<TicTacToe/>}/>
         <Route path='/water-jug-hill' element={<WaterJugHill/>}/>
+        <Route path='/eight-puzzle-gbfs' element={<EightPuzzleSolver/>} />
+        <Route path='/astar-eight-puzzle' element={<AstarEightPuzzle/>}/>
       </Routes>
     </BrowserRouter>
   )

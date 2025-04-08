@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
 import { BACKEND_URL } from "../config";
 
