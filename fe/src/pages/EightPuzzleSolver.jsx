@@ -102,7 +102,7 @@ const EightPuzzleSolver = () => {
 
                 <button
                     onClick={handleSubmit}
-                    className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-200 mb-6"
+                    className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition duration-200 mb-6"
                 >
                     Solve Puzzle
                 </button>
