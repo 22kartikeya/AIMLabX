@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Landing } from './components/Landing';
-import Login from './components/login';
+import Login from './components/Login';
 import TSP from './pages/TSP';
 import AppBar from './components/AppBar';
 import TicTacToe from './pages/TicTacToe';
