@@ -1,4 +1,4 @@
-# 🧠 AI/ML Experiments Playground
+# 🧠 AIMLabX
 
 An interactive visualizer for classic AI problems like **TSP**, **Tic Tac Toe**, **Water Jug**, **8 Puzzle**, and **Predicate Logic Resolution** — all in one platform built with **React + Flask**.
 

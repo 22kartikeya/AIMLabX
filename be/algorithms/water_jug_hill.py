@@ -28,8 +28,7 @@ class WaterJugHillClimbing:
         while True:
             next_states = [s for s in self.get_next_states(current_state) if s not in visited]
             if not next_states:
-                return self.path  # No more states to explore
-
+                return self.path
             next_states.sort(key=self.heuristic, reverse=True)
             best_next = next_states[0]
 

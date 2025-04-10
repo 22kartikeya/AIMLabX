@@ -2,8 +2,6 @@ from app import app, db
 from flask import request, jsonify
 from models import User
 
-# ========== USER ROUTES ==========
-
 @app.route("/api/user", methods=["GET"])
 def get_user():
     user = User.query.all()
@@ -79,8 +77,7 @@ def tsp_route():
         data = request.json
         graph = data.get("graph")
         start = data.get("start")
-        method = data.get("method", "dfs")  # default to dfs
-
+        method = data.get("method", "dfs")
         if not graph or not start:
             return jsonify({"error": "Missing 'graph' or 'start' parameter"}), 400
 
@@ -144,15 +141,11 @@ def play_vs_computer():
             'winner': winner,
             'is_draw': draw
         })
-
-    # Now computer makes its move
     comp_move = get_computer_move(board, ai_player='O', human_player='X')
     if comp_move:
         make_move(board, comp_move[0], comp_move[1], 'O')
-
     winner = check_winner(board)
     draw = is_draw(board) if not winner else False
-
     return jsonify({
         'board': board,
         'winner': winner,
@@ -167,10 +160,8 @@ def solve_water_jug_hill():
     start = tuple(data.get("start", (0, 0)))
     goal = tuple(data.get("goal", (2, 0)))
     capacities = data.get("capacities", [4, 3])
-
     solver = WaterJugHillClimbing(start, capacities[0], capacities[1], goal)
     path = solver.solve(start)
-
     return jsonify({
         "path": path,
         "success": path[-1] == goal
@@ -199,8 +190,7 @@ def astar_water_jug_api():
     try:
         start = tuple(data["start"])
         goal = tuple(data["goal"])
-        capacity = tuple(data["capacity"])  # (jug1, jug2)
-
+        capacity = tuple(data["capacity"])
         solver = WaterJug(capacity[0], capacity[1], start, goal)
         result = solver.a_star_search()
 

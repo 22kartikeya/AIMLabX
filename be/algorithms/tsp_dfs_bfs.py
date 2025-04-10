@@ -6,8 +6,6 @@ def dfs_tsp(graph, start):
 
     def dfs(current, visited, path, cost):
         nonlocal min_cost, best_path
-
-        # If all cities are visited, return to start
         if len(visited) == len(graph):
             total_cost = cost + graph[current][start]
             if total_cost < min_cost:
@@ -31,7 +29,7 @@ def bfs_tsp(graph, start):
             cost = 0
             for i in range(len(perm) - 1):
                 cost += graph[perm[i]][perm[i + 1]]
-            cost += graph[perm[-1]][start]  # return to start
+            cost += graph[perm[-1]][start]
             if cost < min_cost:
                 min_cost = cost
                 min_path = list(perm) + [start]
