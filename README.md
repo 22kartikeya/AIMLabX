@@ -147,6 +147,7 @@ flask run
 
 The entire project is deployed using **[Render](https://render.com)** for both frontend and backend.
 
+🔗 **Live Demo:** [https://aimlabx.onrender.com](https://aimlabx.onrender.com)
 ---
 
 ## 🙌 Credits
