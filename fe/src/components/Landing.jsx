@@ -22,11 +22,11 @@ export function Landing() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 place-items-center z-10">
                     {[
                         { to: "/tsp", title: "DFS and BFS for Travelling Saleman Problem" },
-                        { to: "/tic-tac-toe", title: "Tic Tac Toe Program" },
+                        { to: "/tictactoe", title: "Tic Tac Toe Program" },
                         { to: "/water-jug-hill", title: "Water Jug problem using Hill climbing" },
                         { to: "/eight-puzzle-gbfs", title: "8 Puzzle problem using Greedy Best first Search" },
                         { to: "/astar-eight-puzzle", title: "A* Algorithm for Water jug and 8 Puzzle" },
-                        { to: "/marcus-resolver", title: "Resolution of Marcus Problem of Predicate logic" },
+                        { to: "/custom-logic", title: "Resolution of Marcus Problem of Predicate logic" },
                     ].map(({ to, title }) => (
                         <Link
                             key={to}
