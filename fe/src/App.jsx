@@ -22,11 +22,11 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/about" element={<About />} />
             <Route path="/tsp" element={<TSP />} />
-            <Route path="/tic-tac-toe" element={<TicTacToe />} />
+            <Route path="/tictactoe" element={<TicTacToe />} />
             <Route path="/water-jug-hill" element={<WaterJugHill />} />
             <Route path="/eight-puzzle-gbfs" element={<EightPuzzleSolver />} />
             <Route path="/astar-eight-puzzle" element={<AstarEightPuzzle />} />
-            <Route path="/marcus-resolver" element={<MarcusResolver />} />
+            <Route path="/custom-logic" element={<MarcusResolver />} />
           </Routes>
         </main>
         <Footer />

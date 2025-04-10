@@ -121,34 +121,25 @@ cd ../fe
 npm install
 ```
 
-9. Configure API URL:
-
-
-Create a `config.js` file inside the `frontend/src` folder to store the backend API URL.
-
-```js
-export const BACKEND_URL = " ";
-```
-
-10. Build the frontend:
+9. Build the frontend:
 
 ```bash
 npm run build
 ```
 
-11. Navigate to the backend directory:
+10. Navigate to the backend directory:
 
 ```bash
 cd ../be
 ```
 
-12. Run the Flask app:
+11. Run the Flask app:
 
 ```bash
 flask run
 ```
 
-13. Open your browser and go to `http://localhost:5173/` to view the app.
+12. Open your browser and go to `http://localhost:5173/` to view the app.
 
 ---
 

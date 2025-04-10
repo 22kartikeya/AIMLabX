@@ -13,7 +13,7 @@ frontend_folder = os.path.join(os.getcwd(), "..", "fe")
 dist_folder = os.path.join(frontend_folder, "dist")
 
 # Server static files from the "dist" folder under the "frontend" directory
-@app.route("/", defaults={"filename": ""})
+@app.route("/", defaults={"filename":""})
 @app.route("/<path:filename>")
 def index(filename):
     if not filename:
