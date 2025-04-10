@@ -2,6 +2,8 @@
 
 An interactive visualizer for classic AI problems like **TSP**, **Tic Tac Toe**, **Water Jug**, **8 Puzzle**, and **Predicate Logic Resolution** — all in one platform built with **React + Flask**.
 
+![App Screenshot](fe/src/assets/screenshot.png)
+
 ---
 
 ## 📚 Table of Contents
@@ -11,7 +13,6 @@ An interactive visualizer for classic AI problems like **TSP**, **Tic Tac Toe**,
 - 🧪 AI/ML Problems Included
 - 🛠️ Run Locally
 - 🌐 Deployment
-- 📸 Screenshots
 - 🙌 Credits
 - 📜 License
 
@@ -46,7 +47,7 @@ An interactive visualizer for classic AI problems like **TSP**, **Tic Tac Toe**,
 
 ---
 
-### Run the App Locally
+### 🛠️ Run Locally
 
 1. Clone the repository:
 
@@ -148,6 +149,19 @@ flask run
 ```
 
 13. Open your browser and go to `http://localhost:5173/` to view the app.
+
+---
+
+## 🌐 Deployment
+
+The entire project is deployed using **[Render](https://render.com)** for both frontend and backend.
+
+---
+
+## 🙌 Credits
+
+Made with ❤️ by [Kartikeya Gupta](https://github.com/22kartikeya)
+🔗 [LinkedIn](https://www.linkedin.com/in/kartikeya-gupta-81a421251)
 
 ---
 
