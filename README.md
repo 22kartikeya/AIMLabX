@@ -121,10 +121,10 @@ cd ../fe
 npm install
 ```
 
-9. Build the frontend:
+9. Run the frontend:
 
 ```bash
-npm run build
+npm run dev
 ```
 
 10. Navigate to the backend directory:
