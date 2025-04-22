@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
+import ReactFlow, { Background, Controls } from 'react-flow-renderer';
 import { BACKEND_URL } from '../config';
 
 export default function TSP() {
@@ -20,6 +20,86 @@ export default function TSP() {
             return acc;
         }, {})
     );
+
+    // Function to generate nodes and edges for the graph - showing only the final path
+    const generateGraphData = (matrix, resultPath = []) => {
+        const nodePositions = {
+            A: { x: 100, y: 50 },
+            B: { x: 300, y: 50 },
+            C: { x: 100, y: 200 },
+            D: { x: 300, y: 200 },
+        };
+
+        // All nodes should still be visible
+        const nodes = Object.keys(matrix).map(city => ({
+            id: city,
+            data: { label: city },
+            position: nodePositions[city],
+            style: {
+                background: resultPath.includes(city) ? '#a5b4fc' : '#fff',
+                border: '2px solid #6366f1',
+                padding: 10,
+                borderRadius: 10,
+                width: 50,
+                height: 50,
+            }
+        }));
+
+        const edges = [];
+
+        // Only include edges that are part of the solution path
+        for (let i = 0; i < resultPath.length - 1; i++) {
+            const from = resultPath[i];
+            const to = resultPath[i + 1];
+
+            if (matrix[from] && matrix[from][to] !== '') {
+                edges.push({
+                    id: `${from}-${to}`,
+                    source: from,
+                    target: to,
+                    label: matrix[from][to],
+                    animated: true,
+                    style: {
+                        stroke: '#10b981',
+                        strokeWidth: 2,
+                    },
+                    labelStyle: {
+                        fill: '#374151',
+                        fontWeight: 600,
+                        fontSize: 12,
+                    }
+                });
+            }
+        }
+
+        // Add the final edge to close the loop (if path is complete)
+        if (resultPath.length > 2) {
+            const from = resultPath[resultPath.length - 1];
+            const to = resultPath[0];
+
+            if (matrix[from] && matrix[from][to] !== '') {
+                edges.push({
+                    id: `${from}-${to}`,
+                    source: from,
+                    target: to,
+                    label: matrix[from][to],
+                    animated: true,
+                    style: {
+                        stroke: '#10b981',
+                        strokeWidth: 2,
+                        strokeDasharray: '5,5', // Dashed line for the return path
+                    },
+                    labelStyle: {
+                        fill: '#374151',
+                        fontWeight: 600,
+                        fontSize: 12,
+                    }
+                });
+            }
+        }
+
+        return { nodes, edges };
+    };
 
     const handleInputChange = (from, to, value) => {
         setMatrix(prev => ({
@@ -72,6 +152,9 @@ export default function TSP() {
             setResolving(false);
         }
     };
+
+    // Generate graph data for visualization
+    const graphData = result ? generateGraphData(matrix, result.path) : { nodes: [], edges: [] };
 
     return (
         <div className="min-h-screen w-full flex items-center justify-center relative isolate px-6 pt-2 lg:px-8">
@@ -182,6 +265,29 @@ export default function TSP() {
                         <h2 className="font-bold text-lg text-gray-800">Result:</h2>
                         <p><strong>Path:</strong> {result.path.join(' → ')}</p>
                         <p><strong>Total Cost:</strong> {result.cost}</p>
+                    </motion.div>
+                )}
+
+                {result && (
+                    <motion.div
+                        className="mt-10 h-[400px] bg-white rounded-lg shadow border border-gray-300"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <h3 className="font-bold text-center py-2 text-gray-800">Optimal Path Visualization</h3>
+                        <div style={{ width: '100%', height: '350px' }}>
+                            <ReactFlow
+                                nodes={graphData.nodes}
+                                edges={graphData.edges}
+                                nodesDraggable={false}
+                                nodesConnectable={false}
+                                fitView
+                            >
+                                <Background />
+                                <Controls />
+                            </ReactFlow>
+                        </div>
                     </motion.div>
                 )}
             </motion.div>
